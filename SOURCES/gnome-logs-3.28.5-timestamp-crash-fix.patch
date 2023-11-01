@@ -1,0 +1,27 @@
+From 7d0062a4ab36d457b74fe17b8d494570d4a0334b Mon Sep 17 00:00:00 2001
+From: David King <davidk@gnome.org>
+Date: Mon, 11 Feb 2019 08:46:08 +0000
+Subject: [PATCH] Avoid segfault when updating latest timestamp
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1652642
+---
+ src/gl-journal.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/gl-journal.c b/src/gl-journal.c
+index 4edb1a6..26815cb 100644
+--- a/src/gl-journal.c
++++ b/src/gl-journal.c
+@@ -94,8 +94,7 @@ gl_journal_update_latest_timestamp (GlJournal *journal)
+         g_warning ("Error retrieving the sender timestamps: %s",
+                    g_strerror (-r));
+     }
+-
+-    if (realtime > boot_id->realtime_last)
++    else if (realtime > boot_id->realtime_last)
+     {
+         boot_id->realtime_last = realtime;
+     }
+-- 
+2.20.1
+
